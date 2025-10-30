@@ -1,3 +1,4 @@
+const { time } = require("console");
 
 
 var color = 'red'
@@ -442,3 +443,63 @@ function vextex(n, m) {
         scoll-snap-align: ceter;
     }
 </style> */}
+
+// 瀑布流布局
+// JS实现
+// 加入图片元素
+let imgContainer;
+
+function createImg() {
+    for (let i = 0; i < 40; i++) {
+        var src = 'img/' + i + '.jpg';
+        var img = document.createElement('img');
+        img.onload = setPositions;
+        img.src = src;
+        imgContainer.appendchild(img);
+    }
+}
+
+// 设置位置
+function setPositions() {
+    function cal() {
+        var containerWidth = imgContainer.clientWidth;
+        var columns = Math.floor(containerWidth / imgWidth);
+        var spaceNumber = columns +1 ;
+        var leftSpace = containerWidth - columns * imgWidth;
+        var space = leftSpace / spaceNumber;
+        return {
+            space: space,
+            columns: columns
+        }
+    }
+
+    var info = cal();
+    var nextTops = new Array(info.columns);
+    nextTops.fill(0);
+    for(let i = 0;i< imgContainer.children.length;i++ ){
+        var img = imgContainer.children[i];
+        var minTop = Math.min.apply(null,nextTops);
+        img.style.top = minTop + 'px';
+        var index = nextTops.indexOf(minTop);
+        // 重新设置数组的下一项的下一个top数值
+        nextTops[index] = img.height + info.space + nextTops[index];
+
+        // 设置左边的距离
+        var left = (index + 1) * info.space+ index * imgWidth;
+        img.style.left = left + 'px';
+    }
+
+    var max = Math.max.apply(null,nextTops);
+    imgContainer.style.height = max + 'px';
+}
+
+let timeId = null;
+// 窗口尺寸排列之后，重新排列；
+window.onresize = function () {
+    if(timeId) {
+        clearTimeout(timeId)
+    }
+    timeId = setInterval(() => {
+        setPositions
+    }, 300);
+}
