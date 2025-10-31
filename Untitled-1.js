@@ -1,4 +1,5 @@
 const { time } = require("console");
+const { resolve } = require("path");
 
 
 var color = 'red'
@@ -464,7 +465,7 @@ function setPositions() {
     function cal() {
         var containerWidth = imgContainer.clientWidth;
         var columns = Math.floor(containerWidth / imgWidth);
-        var spaceNumber = columns +1 ;
+        var spaceNumber = columns + 1;
         var leftSpace = containerWidth - columns * imgWidth;
         var space = leftSpace / spaceNumber;
         return {
@@ -476,30 +477,43 @@ function setPositions() {
     var info = cal();
     var nextTops = new Array(info.columns);
     nextTops.fill(0);
-    for(let i = 0;i< imgContainer.children.length;i++ ){
+    for (let i = 0; i < imgContainer.children.length; i++) {
         var img = imgContainer.children[i];
-        var minTop = Math.min.apply(null,nextTops);
+        var minTop = Math.min.apply(null, nextTops);
         img.style.top = minTop + 'px';
         var index = nextTops.indexOf(minTop);
         // 重新设置数组的下一项的下一个top数值
         nextTops[index] = img.height + info.space + nextTops[index];
 
         // 设置左边的距离
-        var left = (index + 1) * info.space+ index * imgWidth;
+        var left = (index + 1) * info.space + index * imgWidth;
         img.style.left = left + 'px';
     }
 
-    var max = Math.max.apply(null,nextTops);
+    var max = Math.max.apply(null, nextTops);
     imgContainer.style.height = max + 'px';
 }
 
 let timeId = null;
-// 窗口尺寸排列之后，重新排列；
+// 窗口尺寸变化之后，重新排列；
 window.onresize = function () {
-    if(timeId) {
+    if (timeId) {
         clearTimeout(timeId)
     }
     timeId = setInterval(() => {
         setPositions
     }, 300);
+}
+
+// 模拟获取数据
+async function fectchCount(id) {
+    function delay(duration = 1000) {
+        return new Promise( (resolve) => {
+            setTimeout(() => {
+                resolve
+            }, duration);
+        })
+    }
+    await delay(300);
+    return id;
 }
