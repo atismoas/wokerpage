@@ -495,6 +495,7 @@ function setPositions() {
 }
 
 let timeId = null;
+let window = {}
 // 窗口尺寸变化之后，重新排列；
 window.onresize = function () {
     if (timeId) {
@@ -517,3 +518,15 @@ async function fectchCount(id) {
     await delay(300);
     return id;
 }
+
+const testobj = {
+    name: 'gree',
+    greet: () => {
+        console.log(this.name);
+    }
+}
+
+console.log("testobj.greet()");
+console.log(testobj.greet()); // undefine
+console.log(testobj.greet.__proto__ === Function.prototype);  // true
+
