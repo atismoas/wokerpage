@@ -530,3 +530,34 @@ console.log("testobj.greet()");
 console.log(testobj.greet()); // undefine
 console.log(testobj.greet.__proto__ === Function.prototype);  // true
 
+// 倾斜按钮
+// button {
+//     transform: skew(-20deg); // 倾斜20度
+//     boder-radius: 15px 0;
+// }
+// 
+// button: before {
+//     content: '';
+//     position: absolute;
+//     width: 20px;
+//     left: -20px; 
+//     bottom: 0;
+//     background : radial-gradient(
+//         circle at 0 0,
+//         transparent 20px;
+//         #409eff 21px;
+//     )
+// }
+// button: after {
+//     content: '';
+//     position: absolute;
+//     width: 20px;
+//     left: -20px; 
+//     bottom: 0;
+//     background : radial-gradient(
+//         circle at 100% 100%,
+//         transparent 20px;
+//         #409eff 21px;
+//     )
+// }
+
