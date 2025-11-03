@@ -552,12 +552,18 @@ console.log(testobj.greet.__proto__ === Function.prototype);  // true
 //     content: '';
 //     position: absolute;
 //     width: 20px;
-//     left: -20px; 
-//     bottom: 0;
+//     right: -20px; 
+//     top: 0;
 //     background : radial-gradient(
 //         circle at 100% 100%,
 //         transparent 20px;
 //         #409eff 21px;
 //     )
 // }
+
+// 鼠标位置信息
+// pageX 与页面左边的距离，不管有没有滚动条
+// clientX 与视口左边的距离
+// offectX 与触发元素事件的元素左边距离
+// movementX 浏览器不停的捕获鼠标的位置，上一次的位置与这一次的位置之间的横向距离
 
