@@ -567,3 +567,16 @@ console.log(testobj.greet.__proto__ === Function.prototype);  // true
 // offectX 与触发元素事件的元素左边距离
 // movementX 浏览器不停的捕获鼠标的位置，上一次的位置与这一次的位置之间的横向距离
 
+const obj2 = {
+    flag : 'John',
+    func: function() {
+        console.log(this);
+        console.log(this.flag);
+    }
+}
+
+const p = new Proxy(obj2,{});
+p.func();
+obj2.func();
+// 打印  Proxy { flag: "John", func : f},John, {flag: 'John',func: f},John
+
