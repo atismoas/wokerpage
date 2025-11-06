@@ -580,3 +580,13 @@ p.func();
 obj2.func();
 // 打印  Proxy { flag: "John", func : f},John, {flag: 'John',func: f},John
 
+// 模板字符串 tag 在此处作为一个函数
+// 函数参数就是模板字符串的分割
+// tag(["I am", ", and I am fool"]，name)
+const name = "Annie"
+function tag(strings, ...args) {
+    console.log(strings)
+    return 123;
+}
+const tagres = tag`I am ${name}, and I am fool!`;
+console.log(tagres);
