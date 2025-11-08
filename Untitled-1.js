@@ -1,4 +1,4 @@
-const { time } = require("console");
+const { time, error } = require("console");
 const { resolve } = require("path");
 
 
@@ -590,3 +590,8 @@ function tag(strings, ...args) {
 }
 const tagres = tag`I am ${name}, and I am fool!`;
 console.log(tagres);
+
+// 可以重试的请求
+function requestA(url, maxCount = 5){
+    return fetch(url).catch(error => maxCount<=0?Promise.reject(error):requestA(url,maxCount -1));
+}
