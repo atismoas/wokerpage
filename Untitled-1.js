@@ -595,3 +595,9 @@ console.log(tagres);
 function requestA(url, maxCount = 5){
     return fetch(url).catch(error => maxCount<=0?Promise.reject(error):requestA(url,maxCount -1));
 }
+
+// 元素的尺寸
+// dom.style.width  DOM树 写在代码文件的内容，不一定是最终结果 
+// getComputedSyle(dom).width CSSOM树 样式的最终计算结果
+// dom.clientWidth  布局树  offectWidth scollerWidth
+// dom.getBoundingClientRect().width   draw 视觉最终的结果
