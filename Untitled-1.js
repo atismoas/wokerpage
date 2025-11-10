@@ -601,3 +601,15 @@ function requestA(url, maxCount = 5){
 // getComputedSyle(dom).width CSSOM树 样式的最终计算结果
 // dom.clientWidth  布局树  offectWidth scollerWidth
 // dom.getBoundingClientRect().width   draw 视觉最终的结果
+
+// 符号绑定
+// 指的是同一块内存空间有两个符号指定
+// 应当合并导出，不能导出变量
+export const counter = {
+    count: 1,
+    increase() {
+        this.count++;
+    }
+}
+// import counter from '/counter.js'
+// console.log(counter.count++);
