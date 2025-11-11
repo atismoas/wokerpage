@@ -613,3 +613,19 @@ export const counter = {
 }
 // import counter from '/counter.js'
 // console.log(counter.count++);
+
+// commonJS 
+// test.js
+this.a = 1;
+exports.b = 2;
+exports = {
+    c:3
+}
+module.exports = {
+    d:4
+}
+exports.e = 5;
+this.f = 6
+// this {a:1,b:2}
+// exports {c:3,e:5}
+// module.exports {d:4}
