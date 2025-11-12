@@ -629,3 +629,41 @@ this.f = 6
 // this {a:1,b:2}
 // exports {c:3,e:5}
 // module.exports {d:4}
+
+// bind , apply , call 
+let nameA = "John";
+let ojbB = {
+    name : "zhangsan",
+    say: function () {
+        console.log(this.name);
+    }
+}
+obj.say(); // zhangsan
+// 在setTImeout中，this的指向通常为window
+// obj.say 是作为回调函数来执行的
+setTimeout(obj.say , 100);  // John
+
+setTimeout(() => {
+    obj.say.apply(obj);
+    obj.say.call(obj);
+}, 100);
+
+// 当调用函数有参数时
+let ojbC = {
+    name : "zhangsan",
+    say: function (para1,para2) {
+        console.log(this.name + para1 + para2);
+    }
+}
+
+setTimeout(() => {
+    // 两者调用的参数形式不同
+    objC.say.apply(obj,["para1","para2"]);
+    objC.say.call(obj,"para1","para2");
+}, 100);
+
+// bind 返回一个函数，不会直接调用
+let returnFn = objC.say.bind(obj);
+// 使用该函数的时候再添加参数
+returnFn("para1","para2");
+
