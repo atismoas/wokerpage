@@ -1,5 +1,4 @@
-const { time, error } = require("console");
-const { resolve } = require("path");
+
 
 
 var color = 'red'
@@ -10,10 +9,10 @@ function sayColor() {
 
 var o = { color: 'blue' }
 
-sayColor();
+//sayColor();
 
-sayColor.call(o);
-sayColor.call(this);
+//sayColor.call(o);
+//sayColor.call(this);
 
 for (var i = 0; i < 3; i++) {
     setTimeout(() => console.log(i), 100); // 输出 3,3,3
@@ -253,7 +252,7 @@ function reverseString3(str) {
     }
     return res;
 }
-function reverseString(str) {
+function reverseString4(str) {
     return str === '' ? '' : reverseString(str.substring(1) + str[0]);
 }
 
@@ -366,7 +365,7 @@ function upload(file, onProgress, onFinish) {
 }
 
 // 上传
-function upload(file, onProgress, onFinish) {
+function _upload(file, onProgress, onFinish) {
     const xhr = new XMLHttpRequest();
     xhr.onload = function () {
         const res = JSON.parse(xhr.responseText);
@@ -509,7 +508,7 @@ window.onresize = function () {
 // 模拟获取数据
 async function fectchCount(id) {
     function delay(duration = 1000) {
-        return new Promise( (resolve) => {
+        return new Promise((resolve) => {
             setTimeout(() => {
                 resolve
             }, duration);
@@ -522,7 +521,7 @@ async function fectchCount(id) {
 const testobj = {
     name: 'gree',
     greet: () => {
-        console.log(this.name);
+        //console.log(this.name);
     }
 }
 
@@ -568,14 +567,14 @@ console.log(testobj.greet.__proto__ === Function.prototype);  // true
 // movementX 浏览器不停的捕获鼠标的位置，上一次的位置与这一次的位置之间的横向距离
 
 const obj2 = {
-    flag : 'John',
-    func: function() {
+    flag: 'John',
+    func: function () {
         console.log(this);
         console.log(this.flag);
     }
 }
 
-const p = new Proxy(obj2,{});
+const p = new Proxy(obj2, {});
 p.func();
 obj2.func();
 // 打印  Proxy { flag: "John", func : f},John, {flag: 'John',func: f},John
@@ -592,8 +591,8 @@ const tagres = tag`I am ${name}, and I am fool!`;
 console.log(tagres);
 
 // 可以重试的请求
-function requestA(url, maxCount = 5){
-    return fetch(url).catch(error => maxCount<=0?Promise.reject(error):requestA(url,maxCount -1));
+function requestA(url, maxCount = 5) {
+    return fetch(url).catch(error => maxCount <= 0 ? Promise.reject(error) : requestA(url, maxCount - 1));
 }
 
 // 元素的尺寸
@@ -616,54 +615,73 @@ export const counter = {
 
 // commonJS 
 // test.js
-this.a = 1;
-exports.b = 2;
-exports = {
-    c:3
-}
-module.exports = {
-    d:4
-}
-exports.e = 5;
-this.f = 6
+// this.a = 1;
+// exports.b = 2;
+// exports = {
+//     c:3
+// }
+// module.exports = {
+//     d:4
+// }
+// exports.e = 5;
+// this.f = 6
 // this {a:1,b:2}
 // exports {c:3,e:5}
 // module.exports {d:4}
 
 // bind , apply , call 
 let nameA = "John";
-let ojbB = {
-    name : "zhangsan",
+let objB = {
+    name: "zhangsan",
     say: function () {
         console.log(this.name);
     }
 }
-obj.say(); // zhangsan
+objB.say(); // zhangsan
 // 在setTImeout中，this的指向通常为window
 // obj.say 是作为回调函数来执行的
-setTimeout(obj.say , 100);  // John
+setTimeout(objB.say, 100);  // John
 
 setTimeout(() => {
-    obj.say.apply(obj);
-    obj.say.call(obj);
+    objB.say.apply(objB);
+    objB.say.call(objB);
 }, 100);
 
 // 当调用函数有参数时
-let ojbC = {
-    name : "zhangsan",
-    say: function (para1,para2) {
+let objC = {
+    name: "zhangsan",
+    say: function (para1, para2) {
         console.log(this.name + para1 + para2);
     }
 }
 
 setTimeout(() => {
     // 两者调用的参数形式不同
-    objC.say.apply(obj,["para1","para2"]);
-    objC.say.call(obj,"para1","para2");
+    objC.say.apply(objC, ["para1", "para2"]);
+    objC.say.call(objC, "para1", "para2");
 }, 100);
 
 // bind 返回一个函数，不会直接调用
-let returnFn = objC.say.bind(obj);
+let returnFn = objC.say.bind(objC);
 // 使用该函数的时候再添加参数
-returnFn("para1","para2");
+returnFn("para1", "para2");
+
+// 超大整数字符串相加
+function addStr(strA, strB) {
+    const len = Math.max(strA.length, strB.length);
+    strA = strA.padStart(len, '0');
+    strB = strB.padStart(len, '0');
+    let carry = 0;
+    let result = '';
+    for (let i = len - 1; i >= 0; i--) {
+        const sum = +strA[i] + +strB[i] + carry;
+        carry = sum >= 10 ? 1 : 0;
+        const r = sum % 10;
+        result = r + result;
+    }
+    if (carry) {
+        result = carry + result;
+    }
+    return result;
+}
 
