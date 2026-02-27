@@ -484,6 +484,8 @@ where a.s_id = (
        limit 1
 );
 
+select * from Student;
+
 | employee_id | employee_name | manager_id | salary | department  | employee_id | employee_name | manager_id | salary | department  |
 | ----------- | ------------- | ---------- | ------ | ----------- | ----------- | ------------- | ---------- | ------ | ----------- |
 | 1           | Alice         | null       | 12000  | Executive   | null        | null          | null       | null   | null        |
