@@ -1,6 +1,3 @@
-
-
-
 var color = 'red'
 
 function sayColor() {
@@ -684,4 +681,19 @@ function addStr(strA, strB) {
     }
     return result;
 }
+
+// 立即把一个函数放进微队列
+function fn_en33(){}
+Promise.resolve().then(fn_en33); 
+
+// requestAnimationFrame
+// 在下一帧渲染的时候调用这个函数一次
+const tick = function(){
+    console.log("tick ta")
+    // 下一帧调用它，然后告诉下一帧去调用它
+    // 然后告诉下一帧调用它...
+    window.requestAnimationFrame(tick)
+}
+// 结果会在每一帧调用它
+
 

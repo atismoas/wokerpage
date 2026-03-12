@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <h1>desprate</h1>
+    <h1 id="notdesh1">not desprate</h1>
+    <button>click me</button>
+    <button id="notbtn"> not click</button>
+</body>
+<script>
+    const h1 = document.querySelector('h1')
+    const btn = document.querySelector('button')
+    const btnnot = document.getElementById('notdesh1')
+
+    function delayloop(delay) {
+        const start = Date.now();
+        while (Date.now() - start < delay) {
+        }
+    }
+
+    btn.addEventListener('click', () => {
+        h1.innerHTML = 'walker';
+        delayloop(3000)
+    })
+
+
+    notbtn.addEventListener('click', () => {
+        btnnot.textContent = "not walker"
+    })
+
+</script>
+
+</html>

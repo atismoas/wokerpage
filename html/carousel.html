@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <div class="carousel-container">
+        <div class="carousel-list">
+            <div class="carousel-item item1">1</div>
+            <div class="carousel-item item2">2</div>
+            <div class="carousel-item item3">3</div>
+        </div>
+        <div class="carousel-left-row">
+            <!-- <span style="font-size: 20px;">←</span> -->
+            <img src="./assets/left.svg" style="width: 30px;height: 30px;">
+        </div>
+        <div class="carousel-right-row">
+            <!-- <span style="font-size: 20px;">→</span> -->
+            <img src="./assets/right.svg" style="width: 30px;height: 30px;">
+        </div>
+        <div class="indicator">
+            <span class="active indicator-span"></span>
+            <span class="indicator-span"></span>
+            <span class="indicator-span"></span>
+        </div>
+    </div>
+</body>
+
+</html>
+
+<script>
+    const doms = {
+        carousellist: document.querySelector('.carousel-list'),
+        arrowLeft: document.querySelector('.carousel-left-row'),
+        arrowRight: document.querySelector('.carousel-right-row'),
+        indicators: document.querySelectorAll('.indicator span')
+    }
+    let currentIndex = 0;
+
+    const count = doms.indicators.length;
+
+    function moveTo(index) {
+        doms.carousellist.style.transform = `translateX(-${index * 100}%)`;
+        doms.carousellist.style.transition = `transform 0.5s ease-in-out`;
+        doms.indicators.forEach((indicator, i) => {
+            indicator.classList.toggle('active', i === index);
+        })
+        currentIndex = index;
+    }
+
+    doms.indicators.forEach((indicator, index) => {
+        indicator.addEventListener('click', () => {
+            moveTo(index);
+        })
+    })
+
+    function init() {
+        const firstClone = doms.carousellist.firstElementChild.cloneNode(true);
+        const lastClone = doms.carousellist.lastElementChild.cloneNode(true);
+        doms.carousellist.appendChild(firstClone);
+        doms.carousellist.insertBefore(lastClone, doms.carousellist.firstElementChild);
+        lastClone.style.marginLeft = `-100%`;
+    }
+
+    init();
+
+    function left() {
+        if (currentIndex == 0) {
+            doms.carousellist.style.transition = 'none';
+            doms.carousellist.style.transform = `translateX(-${count * 100}%)`;
+            // 触发重渲染
+            doms.carousellist.offsetHeight; // 强制回流
+            moveTo(count - 1);
+        }
+        else {
+            moveTo(currentIndex - 1);
+        }
+    }
+
+    function right() {
+        if (currentIndex == count -1) {
+            doms.carousellist.style.transition = 'none';
+            doms.carousellist.style.transform = `translateX(100%)`;
+            // 触发重渲染
+            doms.carousellist.offsetHeight; // 强制回流
+            moveTo(0);
+        }
+        else {
+            moveTo(currentIndex + 1);
+        }
+    }
+
+    doms.arrowLeft.addEventListener('click', left);
+    doms.arrowRight.addEventListener('click', right);
+
+
+</script>
+
+<style>
+    * {
+        box-sizing: border-box;
+    }
+
+    .carousel-container {
+        left: 50%;
+        width: 200px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .carousel-list {
+        width: 200px;
+        height: 100px;
+        display: flex;
+
+
+        flex-direction: row;
+    }
+
+    .carousel-item {
+        width: 200px;
+        height: 100px;
+        background-color: aqua;
+        line-height: 100px;
+        text-align: center;
+        color: black;
+        border: 1px solid black;
+        /* 不放大 不缩小 宽度固定为200 */
+        flex: 0 0 200px;
+    }
+
+    .carousel-left-row {
+        /* left: 100px;
+        top: 45px; */
+        width: 64px;
+        position: absolute;
+        transform: translate(-100%, 0)
+    }
+
+    .carousel-right-row {
+        /* left: 100px;
+        top: 45px; */
+        width: 64px;
+        position: absolute;
+        transform: translate(155%, 0)
+    }
+
+    .item1 {
+        background-color: red;
+    }
+
+    .item2 {
+        background-color: blue;
+    }
+
+    item3 {
+        background-color: green;
+    }
+
+    .indicator {
+        position: absolute;
+        bottom: 0;
+    }
+
+    .indicator-span {
+        display: inline-block;
+        width: 10px;
+        height: 10px;
+        border-radius: 5px;
+        background-color: #ffffff80;
+    }
+
+    .active {
+        background-color: #ffffff;
+    }
+</style>
