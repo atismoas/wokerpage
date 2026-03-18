@@ -1,6 +1,5 @@
 import * as THREE from "three"
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js"
-import { pingpong } from "three/src/math/MathUtils.js"
 
 const size = {
     width: window.innerWidth,

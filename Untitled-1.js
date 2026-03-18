@@ -696,4 +696,80 @@ const tick = function(){
 }
 // 结果会在每一帧调用它
 
+// 消除异步的传染性
+const getUser = async function() {
+    const res = await fetch('/getUser')
+    return res
+}
+const m1 = async function(){
+    await getUser();
+    // do something
+}
+const m2 = async function(){
+    await m1();
+    // do something
+}
+const m3 = async function(){
+    await m2();
+    // do something
+}
+
+const runTime =  function(fn) {
+    const oldfetch = window.fectch
+    // 重写fetch
+    const cache = {
+        status: "pending", // fullfilled,rejected
+        value: null
+    }
+    const newFetch = function(){
+        if(cache.status === 'fullfilled'){
+            return cache.value
+        }
+        else if(cache.status === "rejected"){
+            throw cache.value
+        }
+        const p = oldfetch(...args).then((res) => res.json()).then((res) => {
+            cache.status = 'funfilled'
+            cache.value = res
+        })
+        .catch(e => {
+            cache.status = 'rejected'
+            cache.value = e
+        })
+        throw p
+    }
+    
+    // run fn        
+    try {
+        fn()    
+    }
+    catch(e){
+        if(e instanceof Promise){
+            e.finally(() => {
+                window.fectch = newFetch
+                fn()
+                window.fectch = oldfetch
+            })
+        }
+    }
+    window.fectch = oldfetch
+}
+
+// 数组扁平化
+const flat = function(arr, depth = 1) {
+    const res = []
+    for(const item of arr) {
+        if(Array.isArray(item) && depth > 0){
+            res.push( ...flat(item, depth - 1))
+        }
+        else {
+            res.push(item)
+        }
+    }
+    return res
+}
+
+const arr00 = [1,1,1,[2,1,2],[6,6,2,[5,9,5]]]
+console.log("flat",flat(arr00,2))
+
 
