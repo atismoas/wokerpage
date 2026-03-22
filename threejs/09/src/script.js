@@ -1,7 +1,6 @@
 import * as THREE from "three"
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js'
 import GUI from 'lil-gui'
-import { mix } from "three/src/nodes/math/MathNode.js"
 
 const canvas = document.querySelector('canvas.webgl')
 const scene = new THREE.Scene()

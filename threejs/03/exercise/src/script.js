@@ -109,11 +109,16 @@ const geometry = new THREE.BoxGeometry(1,1,1,)
 // geometry.setAttribute('position',positionAttribute)
 
 
-const material = new THREE.MeshBasicMaterial({ 
+const sky = new THREE.AmbientLight("#ffffff",2)
+
+const material = new THREE.MeshStandardMaterial({ 
     map: texture,
     // color: debugObject.color,
     // wireframe:true
 })
+material.envMapIntensity = 10
+gui.add(material,'envMapIntensity').min(0).max(10)
+
 const mesh = new THREE.Mesh(geometry,material)
 const group = new THREE.Group()
 
@@ -279,7 +284,7 @@ const tick = () => {
 
 
 
-
+scene.add(sky)
 scene.add(mesh)
 scene.add(camera)
 scene.add(axesHelper)
