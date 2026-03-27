@@ -1,18 +1,25 @@
-uniform mat4 projectionMatrix;
-uniform mat4 viewMatrix;
-uniform mat4 modelMatrix;
-uniform float uTime;
+// 重映射
+float remap(float value, float inMin, float inMax, float outMin, float outMax) {
+    return outMin + (value - inMin) * (outMax - outMin) / (inMax - inMin);
+}
 
-attribute vec3 position;
-attribute vec2 uv;
-attribute vec3 normal;
+// 顺时针旋转
+vec2 rotate2DS(vec2 value, float angle){
+    float s = sin(angle);
+    float c = cos(angle);
+    mat2 m = mat2(c,s,-s,c);
+    return m * value;
+}
 
+// 逆时针旋转
+vec2 rotate2D(vec2 value, float angle){
+    float s = sin(angle);
+    float c = cos(angle);
+    mat2 m = mat2(c,-s,s,c);
+    return m * value;
+}
 
-varying float vElevation;
-varying vec2 vUv;
-varying vec3 vNormal;
-varying vec3 vPosition;
-
+// 柏林噪声
 vec4 permute(vec4 x){return mod(((x*34.0)+1.0)*x, 289.0);}
 vec4 taylorInvSqrt(vec4 r){return 1.79284291400159 - 0.85373472095314 * r;}
 vec3 fade(vec3 t) {return t*t*t*(t*(t*6.0-15.0)+10.0);}
@@ -85,38 +92,44 @@ float cnoise(vec3 P){
   return 2.2 * n_xyz;
 }
 
-float calculateY( vec3 position){
-    float elevation = sin(position.x * 3.0 + uTime)  * 0.15 + 
-                        sin(position.z * 3.0 + uTime) * 0.15;
+vec3 ambientLight(vec3 color, float lightIntensity) {
 
-    for(float i = 1.0;i< 4.0;i++){
-        elevation -= abs(cnoise(vec3(position.xz * 3.0 * i,uTime * 0.2)) * 0.15);
-    }
-    return elevation;
-} 
+    return color * lightIntensity;
+}
 
-void main(){
-    // 邻居之间的距离
-    float delta = 0.01;
-    vec4 modelPosition = modelMatrix * vec4(position,1.0);
-    // vec3 normal = (modelMatrix * vec4(normal,0.0)).xyz;
-    // vNormal = normal;
-    float elevation = calculateY(modelPosition.xyz);
-    float elevationA = calculateY(modelPosition.xyz + vec3(delta,0.0,0.0));
-    float elevationB = calculateY(modelPosition.xyz + vec3(0.0,0.0,-delta));
-    vec3 modelPositionA = modelPosition.xyz + vec3(delta,0.0,0.0);
-    vec3 modelPositionB = modelPosition.xyz + vec3(0.0,0.0,-delta);
-    modelPosition.y = elevation;
-    modelPositionA.y += elevationA;
-    modelPositionB.y += elevationB;
+// 平行光
+vec3 directionalLight(vec3 color, float lightIntensity , vec3 direction ,vec3 normal, vec3 viewPosition, float specularPower
+) {
 
-    vec3 normalA = normalize(modelPositionA - modelPosition.xyz);
-    vec3 normalB = normalize(modelPositionB - modelPosition.xyz);
+    vec3 lightDirection = normalize(direction);
+    float shading = dot(lightDirection,normal);
+    shading = max(0.0,shading);
 
-    vec3 normal = cross(normalA, normalB);
-    vNormal = normal;
-    vPosition = modelPosition.xyz;
-    vElevation = elevation;
-    vUv = uv;
-    gl_Position = projectionMatrix * viewMatrix * modelPosition;
+    vec3 reflectLight = reflect(-lightDirection, normal);
+    float reflectDot = - dot(reflectLight,viewPosition);
+    reflectDot = max(0.0,reflectDot);
+    reflectDot = pow(reflectDot,specularPower);
+
+    return color * lightIntensity * (shading + reflectDot);
+}
+
+// 点光源
+vec3 pointLight(vec3 color, float lightIntensity , vec3 lightPosition ,vec3 normal, vec3 viewPosition,float specularPower , vec3 position,float lightDecay
+) {
+
+    vec3 lightDelta = lightPosition - position;
+    float lightDis = length(lightDelta);
+    vec3 lightDirection = normalize(lightDelta);
+    float shading = dot(lightDirection,normal);
+    shading = max(0.0,shading);
+
+    vec3 reflectLight = reflect(-lightDirection, normal);
+    float reflectDot = - dot(reflectLight,viewPosition);
+    reflectDot = max(0.0,reflectDot);
+    reflectDot = pow(reflectDot,specularPower);
+
+    float decay = 1.0 - lightDis * lightDecay;
+    decay = max(0.0,decay);
+
+    return color * lightIntensity *  decay * (shading + reflectDot);
 }

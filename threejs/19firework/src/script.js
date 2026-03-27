@@ -3,7 +3,8 @@ import { OrbitControls} from 'three/addons/controls/OrbitControls.js'
 import gsap from 'gsap'
 import vertex from './shader/vertex.glsl'
 import fragment from './shader/fragment.glsl'
-
+import { Sky } from 'three/addons/objects/Sky.js'
+ 
 const canvas = document.querySelector('canvas.webgl')
 const axesHelper = new THREE.AxesHelper()
 const scene = new THREE.Scene()
@@ -12,6 +13,19 @@ const size = {
     height: window.innerHeight,
     pixelRatio: Math.min(window.devicePixelRatio,2)
 }
+const sky = new Sky()
+sky.material.uniforms['turbidity'].value = 10
+sky.material.uniforms['rayleigh'].value = 3
+sky.material.uniforms['mieCoefficient'].value = 0.1
+sky.material.uniforms['mieDirectionalG'].value = 0.95
+sky.material.uniforms['sunPosition'].value.set(0.3, -0.038, -0.95)
+
+// const sun = new THREE.Vector3()
+// const phi = THREE.MathUtils.degToRad(90 - 30)
+// const theta = THREE.MathUtils.degToRad(180)
+
+// sun.setFromSphericalCoords(1, phi, theta)
+sky.scale.set(1000,1000,1000)
 size.resolution = new THREE.Vector2(size.width * size.pixelRatio,size.height  * size.pixelRatio)
 const camera = new THREE.PerspectiveCamera(35, size.width / size.height ,0.1, 100)
 camera.position.z = 6
@@ -110,6 +124,7 @@ const createRandomFireWork = function(){
 createFirework(1000,new THREE.Vector3(1.0),5,textures[7], 2, '#8affff')
 
 scene.add(axesHelper)
+scene.add(sky)
 const renderer = new THREE.WebGLRenderer({
     canvas: canvas
 })

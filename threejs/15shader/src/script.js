@@ -15,7 +15,7 @@ const debugObject = {}
 debugObject.surfaceColor = '#186691'
 debugObject.depthColor = '#9bd8ff'
 // Geometry 
-const plane = new THREE.PlaneGeometry(3,3,128,128)
+const plane = new THREE.PlaneGeometry(3,3,256,256)
 
 // Meterial
 const material = new THREE.RawShaderMaterial({
@@ -57,6 +57,7 @@ scene.add(axesHelper)
 const renderer = new THREE.WebGLRenderer({
     canvas: canvas
 })
+renderer.toneMapping = THREE.ACESFilmicToneMapping
 renderer.setSize(size.width, size.height)
 renderer.render(scene, camera)
 const timer = new THREE.Timer()
